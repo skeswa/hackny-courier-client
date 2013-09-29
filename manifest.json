@@ -1,0 +1,27 @@
+{
+	"name": "Courier",
+	"manifest_version": 2,
+	"description": "Courier for Google Chrome.",
+	"version": "0.1",
+	"oauth2": {
+		"client_id": "71035194058.apps.googleusercontent.com",
+		"scopes": [
+			"https://www.google.com/m8/feeds"
+		]
+	},
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+	"app": {
+		"background": {
+			"scripts": ["js/background.js"]
+		}
+	},
+	"icons": {
+		"16": "img/icon/courier-16.png",
+		"128": "img/icon/courier-128.png"
+	},
+	"permissions": [
+		"identity",
+		"geolocation",
+		"https://www.google.com/m8/feeds"
+	]
+}

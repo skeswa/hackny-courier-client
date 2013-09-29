@@ -1,0 +1,71 @@
+#content {
+	position: absolute;
+	left: 0px;
+	top: 50px;
+    right: 0px;
+    bottom: 0px;
+	overflow: hidden;
+    background: #52525a url("../img/list/bg.jpg") repeat;
+}
+#log {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 50px;
+    overflow-y: hidden;
+    overflow-x: hidden;
+}
+#chat {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    display: inline-block;
+    padding: 10px;
+}
+#chat button {
+    outline: none;
+}
+.modal-dialog {
+    width: 350px;
+} 
+.modal {
+    overflow: hidden;
+    outline: none;
+}
+.modal-footer button {
+    width: 285px;
+    margin-bottom: 10px;
+    outline: none;
+}
+.modal-footer button.btn+.btn {
+    width: 285px;
+    margin-bottom: 10px;
+    margin-left: 0px;
+    outline: none;
+}
+.modal-body {
+    padding-bottom: 0px;
+}
+p.modal-info {
+    margin-top: 15px;
+}
+#log-inner {
+    padding: 15px   ;
+}
+.panel-timestamp {
+    float: right;
+    margin-right: 10px;
+    margin-top: 10px;
+    display: inline-block;
+}
+.panel.left {
+    margin-right: 30px;
+}
+.panel.right {
+    margin-left: 30px;
+}
+.alert {
+    text-align: center;
+}
