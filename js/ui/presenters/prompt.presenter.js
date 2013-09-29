@@ -13,20 +13,35 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
     var currLong = null;
 
     // Geoloc subroutines
+    var scopeCheck = function(foreignLoc) {
+        var dist = distance(currLat, curLong, foreignLoc.latitude, foreignLoc.longitude);
+        if (locale === "Building") {
+            return (dist < 2);
+        } else if (locale === "Block") {
+            return (dist < 5);
+        } else if (locale === "Neighborhood") {
+            return (dist < 8);
+        } else if (locale === "City") {
+            return (dist < 15);
+        } else {
+            return false;
+        }
+    };
+
     function distance(lat1, lon1, lat2, lon2) {
         var radlat1 = Math.PI * lat1 / 180
         var radlat2 = Math.PI * lat2 / 180
         var radlon1 = Math.PI * lon1 / 180
         var radlon2 = Math.PI * lon2 / 180
         var theta = lon1 - lon2
-        var radtheta = Math.PI * theta/180
+        var radtheta = Math.PI * theta / 180
         var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
         dist = Math.acos(dist)
-        dist = dist * 180/Math.PI
+        dist = dist * 180 / Math.PI
         dist = dist * 60 * 1.1515
         return dist
-    }
-    var updatePosition = function (callback) {
+    };
+    var updatePosition = function(callback) {
         navigator.geolocation.getCurrentPosition(function(position) {
             console.log(position);
             currLat = position.coords.latitude;
@@ -39,23 +54,28 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
     // Bootstrapping subroutines
     var addNotification = function(type, message) {
         var html = notificationTemplateHtml
-        .replace("<%= type %>", type)
-        .replace("<%= message %>", message);
+            .replace("<%= type %>", type)
+            .replace("<%= message %>", message);
 
         $("#log-inner").append(html);
         console.log($("#log")[0].scrollHeight);
         $("#log").scrollTop($("#log")[0].scrollHeight);
     };
     var addMessage = function(msg, from, loc, ts) {
-        var html = messageTemplateHtml
-        .replace("<%= timestamp %>", ts)
-        .replace("<%= orientation %>", (from === "Me") ? "right" : "left")
-        .replace("<%= from %>", (from === "Me") ? from : ("@" + from))
-        .replace("<%= message %>", msg);
+        // Do location check
+        if (scopeCheck(loc)) {
+            var html = messageTemplateHtml
+                .replace("<%= timestamp %>", ts)
+                .replace("<%= orientation %>", (from === "Me") ? "right" : "left")
+                .replace("<%= from %>", (from === "Me") ? from : ("@" + from))
+                .replace("<%= message %>", msg);
 
-        $("#log-inner").append(html);
-        console.log($("#log")[0].scrollHeight);
-        $("#log").scrollTop($("#log")[0].scrollHeight);
+            $("#log-inner").append(html);
+            console.log($("#log")[0].scrollHeight);
+            $("#log").scrollTop($("#log")[0].scrollHeight);
+        } else {
+            console.log("Message was blocked because it was out of location radius.");
+        }
     };
     var joinSession = function(localeId) {
         userId = escape($("#prompt-userId").val());
@@ -85,7 +105,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
             currentSession = ws;
 
             if (sock) {
-                sock.on('disconnect', function () {
+                sock.on('disconnect', function() {
                     addNotification("danger", "Session was brutally murdered by Wifi.");
                     currentSession = null;
                 });
@@ -98,7 +118,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
             addNotification("info", "Number of concurrent users now " + msg.nb + ".");
             console.log("Number of users = " + msg.nb);
         });
-        ws.on('disconnect', function () {
+        ws.on('disconnect', function() {
             addNotification("danger", "Session was brutally murdered by Wifi.");
             currentSession = null;
         });
@@ -123,7 +143,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
         $("#chat-button").click(function() {
             sendMessage();
         });
-        updatePosition(function () {
+        updatePosition(function() {
             addNotification("success", "Location locked to (" + currLat + ", " + currLong + ")");
         });
     };
