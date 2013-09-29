@@ -3,8 +3,10 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
     var notificationTemplateHtml = "<div class=\"alert alert-<%= type %>\">\r\n    <a href=\"#\" class=\"alert-link\"><%= message %><\/a>\r\n<\/div>"
     var messageTemplateHtml = "<div class=\"panel panel-default <%= orientation %>\">\r\n    <div class=\"panel-timestamp\"><%= timestamp %><\/div>\r\n    <div class=\"panel-heading\"><%= from %><\/div>\r\n    <div class=\"panel-body\"><%= message %><\/div>\r\n<\/div>";
     // Constants
-    var WS_URL = /*"courier.nodejitsu.com";*/ "sandile.me";
-    var WS_PORT = 16558;
+    // var WS_URL = "sandile.me";
+    var WS_URL = "courier.nodejitsu.com";
+    //var WS_PORT = 16558;
+    var WS_PORT = 80;
     // Instance variables
     var userId = null;
     var locale = null;
@@ -14,7 +16,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
 
     // Geoloc subroutines
     var scopeCheck = function(foreignLoc) {
-        var dist = distance(currLat, curLong, foreignLoc.latitude, foreignLoc.longitude);
+        var dist = distance(currLat, currLong, foreignLoc.latitude, foreignLoc.longitude);
         if (locale === "Building") {
             return (dist < 2);
         } else if (locale === "Block") {
@@ -39,7 +41,8 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
         dist = Math.acos(dist)
         dist = dist * 180 / Math.PI
         dist = dist * 60 * 1.1515
-        return dist
+        console.log("dist = " + dist);
+        return dist;
     };
     var updatePosition = function(callback) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -113,7 +116,8 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
         });
         ws.on("message", function(data) {
             if (currLat !== null && currLat !== null) {
-                addMessage(data['message'], data['pseudo'], data['location'], new Date().toISOString(), false);
+                console.log(data);
+                addMessage(data['message'], data['pseudo'], data['loc'], new Date().toISOString(), false);
             }
         });
         ws.on('nbUsers', function(msg) {
