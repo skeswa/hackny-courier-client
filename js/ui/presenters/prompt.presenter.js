@@ -81,7 +81,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
     };
     var joinSession = function(localeId) {
         userId = escape($("#prompt-userId").val());
-        console.log(userId);
+        console.log("joining session...");
         switch (localeId) {
             case 0:
                 // Building
