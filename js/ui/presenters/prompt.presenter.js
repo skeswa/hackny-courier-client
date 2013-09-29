@@ -3,10 +3,10 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
     var notificationTemplateHtml = "<div class=\"alert alert-<%= type %>\">\r\n    <a href=\"#\" class=\"alert-link\"><%= message %><\/a>\r\n<\/div>"
     var messageTemplateHtml = "<div class=\"panel panel-default <%= orientation %>\">\r\n    <div class=\"panel-timestamp\"><%= timestamp %><\/div>\r\n    <div class=\"panel-heading\"><%= from %><\/div>\r\n    <div class=\"panel-body\"><%= message %><\/div>\r\n<\/div>";
     // Constants
-    // var WS_URL = "sandile.me";
-    var WS_URL = "courier.nodejitsu.com";
-    //var WS_PORT = 16558;
-    var WS_PORT = 80;
+    var WS_URL = "sandile.me";
+    // var WS_URL = "courier.nodejitsu.com";
+    var WS_PORT = 16558;
+    // var WS_PORT = 80;
     // Instance variables
     var userId = null;
     var locale = null;
