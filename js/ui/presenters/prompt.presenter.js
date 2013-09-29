@@ -11,7 +11,21 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
     var currentSession = null;
     var currLat = null;
     var currLong = null;
-    // Bootstrapping subroutines
+
+    // Geoloc subroutines
+    function distance(lat1, lon1, lat2, lon2) {
+        var radlat1 = Math.PI * lat1 / 180
+        var radlat2 = Math.PI * lat2 / 180
+        var radlon1 = Math.PI * lon1 / 180
+        var radlon2 = Math.PI * lon2 / 180
+        var theta = lon1 - lon2
+        var radtheta = Math.PI * theta/180
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        dist = Math.acos(dist)
+        dist = dist * 180/Math.PI
+        dist = dist * 60 * 1.1515
+        return dist
+    }
     var updatePosition = function (callback) {
         navigator.geolocation.getCurrentPosition(function(position) {
             console.log(position);
@@ -22,6 +36,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
             addNotification("danger", "We were blocked from getting Location.");
         });
     };
+    // Bootstrapping subroutines
     var addNotification = function(type, message) {
         var html = notificationTemplateHtml
         .replace("<%= type %>", type)
@@ -130,7 +145,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
     };
 
     // Handle header ui events
-    eventManager.on("ui:ready", function() {
+    eventManager.on("prompt:present", function() {
         bootbox.dialog({
             message: promptHtml,
             title: "Welcome to Courier",

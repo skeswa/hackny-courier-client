@@ -9,7 +9,6 @@
 			"https://www.google.com/m8/feeds"
 		]
 	},
-	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 	"app": {
 		"background": {
 			"scripts": ["js/background.js"]

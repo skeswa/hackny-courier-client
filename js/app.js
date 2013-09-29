@@ -11,7 +11,7 @@ require.config({
 // Start the main app logic.
 require(["./js/ui/event.manager.js", "./js/dal/dal.js", "./js/ui/ui.js"], function (eventManager, dal, ui) {
     $(function () {
-        eventManager.trigger("ui:ready");
+        eventManager.trigger("prompt:present");
     });
     // Initialize modules
     dal.init();
