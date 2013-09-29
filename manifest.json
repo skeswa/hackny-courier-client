@@ -19,12 +19,10 @@
 		"128": "img/icon/courier-128.png"
 	},
 	"permissions": [
-		"tabs",
 		"identity",
 		"geolocation",
 		"http://*/*",
         "https://*/*",
 		"https://www.google.com/m8/feeds"
-	],
-	"content_security_policy": "script-src 'self' http://localhost:8080 ; object-src 'self' "
+	]
 }

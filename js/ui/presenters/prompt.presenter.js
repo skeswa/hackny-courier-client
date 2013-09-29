@@ -16,6 +16,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
 
     // Geoloc subroutines
     var scopeCheck = function(foreignLoc) {
+        if (!foreignLoc || !foreignLoc.latitude || !foreignLoc.longitude || !currLat || !currLong) return false;
         var dist = distance(currLat, currLong, foreignLoc.latitude, foreignLoc.longitude);
         if (locale === "Building") {
             return (dist < 2);
