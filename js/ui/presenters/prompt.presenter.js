@@ -16,6 +16,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
 
     // Geoloc subroutines
     var scopeCheck = function(foreignLoc) {
+        console.log("sc " + currLat + ", " + currLong + ", foreignLoc: " + foreignLoc);
         if (!foreignLoc || !foreignLoc.latitude || !foreignLoc.longitude || !currLat || !currLong) return false;
         var dist = distance(currLat, currLong, foreignLoc.latitude, foreignLoc.longitude);
         if (locale === "Building") {
@@ -47,7 +48,6 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
     };
     var updatePosition = function(callback) {
         navigator.geolocation.getCurrentPosition(function(position) {
-            console.log(position);
             currLat = position.coords.latitude;
             currLong = position.coords.longitude;
             callback(currLat, currLong);
@@ -62,12 +62,11 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
             .replace("<%= message %>", message);
 
         $("#log-inner").append(html);
-        console.log($("#log")[0].scrollHeight);
         $("#log").scrollTop($("#log")[0].scrollHeight);
     };
     var addMessage = function(msg, from, loc, ts) {
         // Do location check
-        if (scopeCheck(loc)) {
+        if (from === 'Me' || scopeCheck(loc)) {
             var html = messageTemplateHtml
                 .replace("<%= timestamp %>", ts)
                 .replace("<%= orientation %>", (from === "Me") ? "right" : "left")
@@ -75,7 +74,6 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
                 .replace("<%= message %>", msg);
 
             $("#log-inner").append(html);
-            console.log($("#log")[0].scrollHeight);
             $("#log").scrollTop($("#log")[0].scrollHeight);
         } else {
             console.log("Message was blocked because it was out of location radius.");
@@ -107,7 +105,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
         ws.on("connect", function(sock) {
             addNotification("info", "Joined session successfully.");
             currentSession = ws;
-
+            console.log("connecting...");
             if (sock) {
                 sock.on('disconnect', function() {
                     addNotification("danger", "Session was brutally murdered by Wifi.");
@@ -116,7 +114,9 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
             }
         });
         ws.on("message", function(data) {
+            console.log("gghgh");
             if (currLat !== null && currLat !== null) {
+                console.log("m");
                 console.log(data);
                 addMessage(data['message'], data['pseudo'], data['loc'], new Date().toISOString(), false);
             }
@@ -165,7 +165,7 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
                 }
             };
             currentSession.emit("message", jsonObj);
-            addMessage($("#chat-box").val(), "Me", null, new Date().toISOString(), true);
+            addMessage($("#chat-box").val(), "Me", -1, new Date().toISOString(), true);
             $("#chat-box").val("");
             $("#chat-box").focus();
         }
