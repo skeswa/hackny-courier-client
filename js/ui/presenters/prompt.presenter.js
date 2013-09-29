@@ -112,7 +112,9 @@ define(["jquery", "io", "../event.manager.js"], function($, io, eventManager) {
             }
         });
         ws.on("message", function(data) {
-            addMessage(data['message'], data['pseudo'], data['location'], new Date().toISOString(), false);
+            if (currLat !== null && currLat !== null) {
+                addMessage(data['message'], data['pseudo'], data['location'], new Date().toISOString(), false);
+            }
         });
         ws.on('nbUsers', function(msg) {
             addNotification("info", "Number of concurrent users now " + msg.nb + ".");
